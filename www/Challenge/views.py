@@ -5,13 +5,14 @@ import json
 from flask import Blueprint, render_template, request, url_for, redirect
 from sqlalchemy import and_
 from Challenge import db
-from sqlalchemy.exc import OperationalError, IntegrityError
+from sqlalchemy.exc import OperationalError, IntegrityError, ProgrammingError
 from flask_jsonpify import jsonify
 
 from .models import Event, Ticket, Seller, Referal, Customer, OrderStatus, Order
 from .utils import error_json, data_json, success_json
 
 tickets = Blueprint('tickets', __name__)
+
 
 @tickets.route('/events/<int:event_id>/tickets', methods=['GET'])
 def get_tickets(event_id):
@@ -57,9 +58,11 @@ def add_tickets(seller_id):
     '''Post a new ticket from a seller
     '''
     ticket_info = {}
-
     try:
-        data = json.loads(request.data)
+        if request.data:
+            data = json.loads(request.data)
+        else:
+            data = request.form
         ticket_info['seller_id'] = seller_id
         ticket_info['event_id'] = data.get('event_id')
         ticket_info['ticket_section'] = data.get('ticket_section')
@@ -71,7 +74,7 @@ def add_tickets(seller_id):
 
     except ValueError as ex:
         return error_json('Invalid Json')
-    except (OperationalError, IntegrityError) as ex:
+    except (OperationalError, IntegrityError, ProgrammingError) as ex:
         return error_json('lack of necessary info or incorrect info')
     except Exception as ex:
         return error_json('unsuccess')
@@ -83,7 +86,10 @@ def buy_one_ticket(ticket_id):
     '''Update a ticket to sold
     '''
     try:
-        data = json.loads(request.data)
+        if request.data:
+            data = json.loads(request.data)
+        else:
+            data = request.form
         referal_id = data.get('referal_id')
         customer_id = data.get('customer_id')
 
@@ -102,7 +108,7 @@ def buy_one_ticket(ticket_id):
             return error_json('Out of stock')
     except ValueError as ex:
         return error_json('Invalid Json')
-    except (OperationalError, IntegrityError) as ex:
+    except (OperationalError, IntegrityError, ProgrammingError) as ex:
         db.session.rollback()
         return error_json('lack of necessary info or incorrect info')
     except Exception as ex:

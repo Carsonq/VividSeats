@@ -78,3 +78,9 @@ CREATE TABLE IF NOT EXISTS `order`(
     FOREIGN KEY fk_status_order(order_status) REFERENCES order_status(status_id),
     FOREIGN KEY fk_ticket_order(ticket_id) REFERENCES ticket(ticket_id)
 );
+
+-- index for scenarios
+CREATE INDEX idx_ticket_event ON ticket(event_id);
+CREATE INDEX idx_ticket_quantity ON ticket(ticket_quantity);
+CREATE INDEX idx_event_city ON event(event_city);
+CREATE INDEX idx_event_date ON event(event_time);
