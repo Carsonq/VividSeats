@@ -43,6 +43,11 @@ $ cd www
 $ python web.py
 ```
 
+##### Api Test
+ - Recommend to use [Postman](https://www.getpostman.com/) to test the apis.
+ - There are some test cases in api_test.py
+
+
 ### APIs
 
 | API | method | Description | Example | Post Data Example |
