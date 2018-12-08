@@ -36,16 +36,16 @@ def get_ticket_records():
     '''
     with open('sampleTickets1.csv') as csvfile:
         next(csvfile, None)
-        csv_reader = csv.reader(csvfile, deleimiter=',')
+        csv_reader = csv.reader(csvfile, delimiter=',')
         keys = set()
         res = []
         i = 1
 
         for r in csv_reader:
-            k = '-'.join([r[0], str[i], r[1], r[4], r[3]])
+            k = '-'.join([r[0], str(i), r[1], r[4], r[3]])
             if k not in keys:
-                res.append([int(r[0], i, int(r[1]), r[4], int(r[2]), 
-                            round(float(r[3]), 2))])
+                res.append([int(r[0]), i, int(r[1]), r[4], int(r[2]), 
+                            round(float(r[3]), 2)])
                 keys.add(k)
             i = i % 7 + 1
 
@@ -70,7 +70,7 @@ def populate_table_event(cursor, event_ids):
                      'US',
                      '60601',
                      datetime.datetime.strptime('12/07/2018 18:00:00',
-                        '%m%d%Y %H:%M:%S') + datetime.timedelta(days=i)
+                        '%m/%d/%Y %H:%M:%S') + datetime.timedelta(days=i)
                     ])
 
     try:
@@ -111,10 +111,10 @@ def populate_table_customer(cursor):
                      'customer street %s' % str(i+1),
                      'customer city %s' % str(i+1),
                      'customer state %s' % str(i+1),
-                     'customer phone %s' % str(i+1),
-                     'customer email %s' % str(i+1),
                      'US',
                      '60601',
+                     'customer phone %s' % str(i+1),
+                     'customer email %s' % str(i+1),
                      i % 3 + 1
                     ])
     try:
@@ -175,9 +175,9 @@ def populate_table_order(cursor):
 
 def main():
     populate_table_seller()
-    ticket = get_ticket_records()
+    tickets = get_ticket_records()
 
-    if ticket:
+    if tickets:
         event_ids = get_event_ids(tickets)
         populate_table_event(event_ids)
         populate_table_ticket(tickets)

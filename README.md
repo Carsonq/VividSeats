@@ -1,15 +1,19 @@
-sudo mkdir /usr/local/include
-sudo chown -R `whoami`:admin /usr/local/include
-sudo mkdir /usr/local/lib
-sudo chown -R `whoami`:admin /usr/local/lib
-sudo mkdir /usr/local/sbin
-sudo chown -R `whoami`:admin /usr/local/sbin
+Work on Ubuntu 18.04
 
-brew install mysql
-brew services start mysql
-alias mysql=/usr/local/opt/mysql/bin/mysql
-alias mysqladmin=/usr/local/opt/mysql/bin/mysqladmin
-mysqladmin --user=root password "root"
-sudo easy_install pip
-export PATH=$PATH:/usr/local/opt/mysql/bin
-pip install MySQL-python
+sudo apt-get update
+sudo apt-get install mysql-server
+sudo service mysql start
+
+login to mysql "sudo mysql -u root"
+execute: ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+log out.
+
+mysql -u root -p < vivid.sql
+sudo apt-get install python-mysqldb
+sudo apt-get install python-pip
+
+pip install Flask
+pip install Flask-SQLAlchemy
+pip install flask-jsonpify
+
+python populate_tables.py
